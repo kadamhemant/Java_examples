@@ -17,7 +17,7 @@ public class testclass {
         ExecutorService es=Executors.newFixedThreadPool(3);
 
 
-        Thread[] threads=new Thread[inFiles.length];
+        //Thread[] threads=new Thread[inFiles.length];
 
             for (int i = 0; i < inFiles.length; i++) {
                 Adder adder = new Adder(inFiles[i], outFiles[i]);
