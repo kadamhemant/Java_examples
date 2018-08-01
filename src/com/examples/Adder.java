@@ -5,22 +5,22 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.Callable;
 
 /**
  * Hello world!
  *
  */
-public class Adder implements Runnable {
+public class Adder implements Callable<Integer> {
 
-    private Path inFile,outFile;
+    private Path inFile;
 
-    public Adder(Path inFile, Path outFile)
+    public Adder(Path inFile)
     {
         this.inFile=inFile;
-        this.outFile=outFile;
     }
 
-    public void doAdd() throws IOException {
+    public int doAdd() throws IOException {
         int total=0;
         String line=null;
 
@@ -29,23 +29,24 @@ public class Adder implements Runnable {
             while((line=reader.readLine())!=null)
             {
                 total+=Integer.parseInt(line);
-                System.out.println(total);
+                System.out.println("Adding Value "+Integer.parseInt(line)+" from file "+inFile.getFileName()+", Now total:- "+total);
             }
         }
 
-        try(BufferedWriter writer=Files.newBufferedWriter(outFile)){
+        return total;
+
+        /*try(BufferedWriter writer=Files.newBufferedWriter(outFile)){
 
             writer.write("Total: "+total);
-        }
+        }*/
     }
 
     @Override
-    public void run() {
-        try {
-            doAdd();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public Integer call() throws IOException {
+
+    return doAdd();
     }
-}
+
+    }
+
 

@@ -2,9 +2,7 @@ package com.examples;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class testclass {
 
@@ -18,14 +16,27 @@ public class testclass {
 
 
         //Thread[] threads=new Thread[inFiles.length];
+        Future<Integer>[] results=new Future[inFiles.length];
 
             for (int i = 0; i < inFiles.length; i++) {
-                Adder adder = new Adder(inFiles[i], outFiles[i]);
-                es.submit(adder);
+                Adder adder = new Adder(inFiles[i]);
+                results[i]=es.submit(adder);
                 /*threads[i]=new Thread(adder);
                 threads[i].start();*/
             }
-
+        for (Future<Integer> result:results) {
+            int value= 0;
+            try {
+                value = result.get();
+             } catch (ExecutionException e) {
+             Throwable adderex=e.getCause();
+                System.out.println("Execution Exception "+adderex);
+            }catch (Exception e)
+            {
+                System.out.println(e.getCause());
+            }
+            System.out.println("Total: "+value);
+        }
 
         try {
             es.shutdown();
